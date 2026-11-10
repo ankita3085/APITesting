@@ -1,0 +1,48 @@
+### Try these in VS Code (REST Client extension) or Rider / Visual Studio.
+@host = http://localhost:5000
+
+### 1. Public: list products (no token)
+GET {{host}}/api/products
+
+### 2. Create without token -> 401 Unauthorized
+POST {{host}}/api/products
+Content-Type: application/json
+
+{ "name": "Monitor", "price": 199.99, "stock": 10 }
+
+### 3. Register a normal user
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{ "username": "alice", "password": "secret123" }
+
+### 4. Login as alice -> copy the token into @token below
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "username": "alice", "password": "secret123" }
+
+### 5. Create with token -> 201
+@token = PASTE_TOKEN_HERE
+POST {{host}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Monitor", "description": "27 inch", "price": 199.99, "stock": 10 }
+
+### 6. Update
+PUT {{host}}/api/products/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Keyboard v2", "price": 69.99, "stock": 30 }
+
+### 7. Delete as alice -> 403 Forbidden (needs Admin)
+DELETE {{host}}/api/products/1
+Authorization: Bearer {{token}}
+
+### 8. Login as the seeded admin, then repeat #7 with the admin token -> 204
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "username": "admin", "password": "Admin123!" }
